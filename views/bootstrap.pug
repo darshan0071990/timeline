@@ -1,0 +1,47 @@
+extends layout
+block content
+  .row
+    .col-xs-12
+      br
+      #bootstrapModalFullCalendar
+
+  // Modal Code from the Bootstrap examples
+  #fullCalModal.modal.fade
+    .modal-dialog
+      .modal-content
+        .modal-header Task
+          button.close(type='button', data-dismiss='modal')
+            span(aria-hidden='true') ×
+            span.sr-only close
+          h4#modalTitle.modal-title
+        #modalBody.modal-body
+          .row
+            .col-md-9.col-md-offset-1
+              form(method='POST' action='/createtask')
+                div.form-group
+                  label(for='name') Task Name:
+                  input#name.form-control(type='text', placeholder='Task Name' name='name')
+                div.form-group
+                  label(for='name') Task Description:
+                  textarea#desc.form-control(type='text', placeholder='Task Description' name='description')
+                div.form-group
+                  label(for='email') Start Date:
+                  input#sdate.form-control(type='text', placeholder='Start Date' name='sdate')
+                div.form-group
+                  label(for='favoriteBook') End Date:
+                  input#edate.form-control(type='text', placeholder='End Date' name='edate')
+                div.form-group
+                  label(for='pid') Project:
+                  select#pid.form-control(name='pid')
+                    each project in projects
+                        option(value=project.id) #{project.name}
+                div.form-group
+                  label(for='user') Assign User:
+                  select#uid.form-control(name='uid')
+                      each user in users
+                          option(value=user.id) #{user.name}
+                  //input#uid.form-control(type='text' placeholder="Assign User" name='user')
+                  br
+                  br
+                  button.btn.btn-primary(type='submit') Save
+                  button.btn.btn-default(type='button', data-dismiss='modal') Close

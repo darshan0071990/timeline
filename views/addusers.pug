@@ -1,0 +1,16 @@
+extends layout
+block content
+    br
+    br
+    .row
+        .col-xs-12
+            .col-md-9.col-md-offset-1
+                form(method='POST' action='/createusers')
+                    div.form-group
+                        label(for='name') Full Name:
+                        input#name.form-control(type='text', placeholder='Full Name' name='name')
+                    div.form-group
+                        label(for='email') Email:
+                        input#email.form-control(type='email' name='email', placeholder='email')
+                    div.form-group
+                        button.btn.btn-primary(type='submit') Save

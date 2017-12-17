@@ -1,0 +1,16 @@
+extends layout
+block content
+    br
+    br
+    .row
+        .col-xs-12
+            .col-md-9.col-md-offset-1
+                form(method='POST' action='/createproject')
+                    div.form-group
+                        label(for='name') Project Name:
+                        input#name.form-control(type='text', placeholder='Project Name' name='name')
+                    div.form-group
+                        label(for='color') Project Color:
+                        input#pw.form-control(type='text' name='color', placeholder='Color')
+                    div.form-group
+                        button.btn.btn-primary(type='submit') Save

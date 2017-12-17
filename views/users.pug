@@ -1,0 +1,16 @@
+extends layout
+
+block content
+    .row
+        .col-xs-12
+            br
+            table.table
+                thead
+                    tr: th SrNo
+                        th Name
+                        th Email
+                for users in data
+                    tr
+                        td= users.id
+                        td= users.name
+                        td= users.email

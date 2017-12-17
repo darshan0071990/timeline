@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  .row
+    .col-xs-12
+      br
+      table.table
+        thead
+          tr: th SrNo
+            th Name
+            th Color
+        for projects in data
+          tr
+            td= projects.id
+            td= projects.name
+            td= projects.color

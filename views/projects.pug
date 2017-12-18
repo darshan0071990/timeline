@@ -6,11 +6,13 @@ block content
       br
       table.table
         thead
-          tr: th SrNo
+          tr: th Project ID
             th Name
+            th Users
             th Color
         for projects in data
           tr
             td= projects.id
             td= projects.name
+            td= project_users.id
             td= projects.color

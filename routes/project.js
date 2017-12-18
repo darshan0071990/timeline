@@ -21,16 +21,18 @@ router.get('/addproject', function(req, res, next) {
 });
 
 router.post('/createproject',function(req,res,next){
-
-    sql.sync()
-        .then(() => models.Project.create({
-        name:req.body.name,
-        color: req.body.color
-    })).then(function (data) {
-        res.redirect('/projects');
-    }).error(function(err){
-        res.send("Not Success");
+    models.projects.create({ name:req.body.name, color: req.body.color}).then(task => {
+        // you can now access the newly created task via the variable task
+        res.redirect('/project');
     });
+    //     models.Project.create({
+    //     name:req.body.name,
+    //     color: req.body.color
+    // })).then(function (data) {
+    //     res.redirect('/projects');
+    // }).error(function(err){
+    //     res.send("Not Success");
+    // });
 });
 
 module.exports = router;

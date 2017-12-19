@@ -3,9 +3,9 @@ $(function() {
 	$('#bootstrapModalFullCalendar').fullCalendar({
 		events: '/events/',
 		header: {
-		   left: '',
-		   center: 'prev title next',
-		   right: ''
+		   left: 'prev today next',
+		   center: 'title',
+		   right: 'month agendaWeek agendaDay'
 		},
 		eventClick:  function(event, jsEvent, view) {
 		   // $('#modalTitle').html(event.title);
@@ -20,6 +20,8 @@ $(function() {
     }
 	});
 
+    $('#edittask').fullCalendar({})
 	$('#sdate').datepicker({ dateFormat: 'yy-mm-dd' });
     $('#edate').datepicker({ dateFormat: 'yy-mm-dd' });
+
 });

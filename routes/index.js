@@ -136,12 +136,10 @@ router.post('/createtask',function(req,res,next){
     var pid = req.body.pid;
     var uid = req.body.uid;
     models.tasks.create({ name: name, description: description, sdate: sdate, edate: edate, pid: pid }).then(task => {
-        models.task_users.create({tid: task.id, uid: uid}).then(function(data,err){
             res.redirect('/bootstrap');
-        });
     });
 });
-
+// models.task_users.create({tid: task.id, uid: uid}).then(function(data,err)
 
 router.get('/calendarJSON', calendarController.calendarJSON);
 

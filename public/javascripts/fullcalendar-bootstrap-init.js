@@ -20,7 +20,6 @@ $(function() {
     }
 	});
 
-    $('#edittask').fullCalendar({})
 	$('#sdate').datepicker({ dateFormat: 'yy-mm-dd' });
     $('#edate').datepicker({ dateFormat: 'yy-mm-dd' });
 

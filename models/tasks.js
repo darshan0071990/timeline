@@ -6,11 +6,12 @@ module.exports = (sequelize, DataTypes) => {
               autoIncrement: true,
               primaryKey: true
         },
-          name: DataTypes.STRING,
-          description: DataTypes.STRING,
-          sdate: DataTypes.DATE,
-          edate: DataTypes.DATE,
-          pid: DataTypes.INTEGER
+        name: DataTypes.STRING,
+        description: DataTypes.STRING,
+        sdate: DataTypes.DATE,
+        edate: DataTypes.DATE,
+        pid: DataTypes.INTEGER,
+        uid: DataTypes.INTEGER
     });
 
     // Project.associate = function (models) {

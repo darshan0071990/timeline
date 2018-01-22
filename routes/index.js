@@ -5,72 +5,6 @@ var models  = require('./../models');
 
 var calendarController = require(path.resolve(__dirname, 'calendar-controller'));
 
-// const Sequelize = require('sequelize');
-// const sql = new Sequelize('timeline', 'root', '', {
-//     host: 'localhost',
-//     port: 3306,
-//     dialect: 'mysql'
-// });
-//
-// var test = sql.authenticate()
-//     .then(function () {
-//         console.log("CONNECTED! ");
-//     })
-//     .catch(function (err) {
-//         console.log("SOMETHING DONE GOOFED");
-//     })
-//     .done();
-
-
-// const User = sql.define('user', {
-//   id: {
-//       type: Sequelize.INTEGER,
-//       autoIncrement: true,
-//       primaryKey: true
-//   },
-//   name: Sequelize.STRING,
-//   email: Sequelize.STRING,
-//   password: Sequelize.STRING
-// });
-//
-// const Project = sql.define('project', {
-//   id: {
-//       type: Sequelize.INTEGER,
-//       autoIncrement: true,
-//       primaryKey: true
-//   },
-//   name: Sequelize.STRING,
-//   color: Sequelize.STRING
-// });
-
-// const ProjectUser = sql.define('project_user', {
-//   id: {
-//     type: Sequelize.INTEGER,
-//     autoIncrement: true,
-//     primaryKey: true
-//   },
-//   pid: Sequelize.INTEGER,
-//   uid: Sequelize.INTEGER,
-// });
-//
-// const Task = sql.define('task',{
-//   id: {
-//       type: Sequelize.INTEGER,
-//       autoIncrement: true,
-//       primaryKey: true
-//   },
-//   name: Sequelize.STRING,
-//   description: Sequelize.STRING,
-//   sdate: Sequelize.DATE,
-//   edate: Sequelize.DATE,
-//   pid: Sequelize.INTEGER
-// });
-//
-// const TaskUser = sql.define('task_users',{
-//   tid: Sequelize.INTEGER,
-//   pu_id: Sequelize.INTEGER
-// });
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'FullCalendar with Event Modals' });
@@ -95,8 +29,10 @@ router.get('/events',function(req,res,next){
     models.tasks.findAll().then(function (taskdata,err) {
         taskdata.forEach(function(item){
             event.push({
-                "title":item.name,
+                "id":item.id,
+                "title":"DW",
                 "allday":"true",
+                "resourceId":item.uid,
                 "borderColor":"#5173DA",
                 "color":"#99ABEA",
                 "textColor":"#000000",
@@ -135,11 +71,11 @@ router.post('/createtask',function(req,res,next){
     var edate = req.body.edate;
     var pid = req.body.pid;
     var uid = req.body.uid;
-    models.tasks.create({ name: name, description: description, sdate: sdate, edate: edate, pid: pid }).then(task => {
+
+    models.tasks.create({ name: name, description: description, sdate: sdate, edate: edate, pid: pid, uid: uid }).then(task => {
             res.redirect('/bootstrap');
     });
 });
-// models.task_users.create({tid: task.id, uid: uid}).then(function(data,err)
 
 router.get('/calendarJSON', calendarController.calendarJSON);
 

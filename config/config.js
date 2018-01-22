@@ -4,20 +4,20 @@ module.exports = {
         password: '',
         database: 'timeline',
         host: 'localhost',
-        dialect: 'mysql',
+        dialect: 'sqlite',
     },
     test: {
         username: 'root',
         password: '',
         database: 'timeline',
         host: 'localhost',
-        dialect: 'mysql',
+        dialect: 'sqlite',
     },
     production: {
         username: 'root',
         password: '',
         database: 'timeline',
         host: 'localhost',
-        dialect: 'mysql',
+        dialect: 'sqlite',
     }
 };

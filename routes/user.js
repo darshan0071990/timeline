@@ -24,6 +24,13 @@ router.post('/adduser',function(req,res,next){
     models.users.create({ name:req.body.name, email: req.body.email}).then(task => {
         // you can now access the newly created task via the variable task
         res.redirect('/user');
+    });
+
+});
+router.get('/fetchUsers',function(req,res,next){
+    models.users.findAll({attributes: ['id', ['name','title']]}).then(function (data,err) {
+        res.send(data);
+    })
 });
     // sql.sync()
     //     .then(() => User.create({
@@ -35,6 +42,6 @@ router.post('/adduser',function(req,res,next){
     //     res.send("Not Success");
     // });
 
-});
+
 
 module.exports = router;

@@ -3,7 +3,7 @@ block content
   .row
     .col-xs-12
       br
-      #bootstrapModalFullCalendar
+      #calander
 
   // Modal Code from the creating tasks
   #fullCalModal.modal.fade
@@ -19,10 +19,13 @@ block content
             .col-md-9.col-md-offset-1
               form(method='POST' action='/createtask')
                 div.form-group
-                  label(for='name') Task Name:
-                  input#name.form-control(type='text', placeholder='Task Name' name='name')
+                  label(for='pid') Project:
+                  select#pid.form-control(name='pid')
+                    option(value="") Select Project
+                    for project in projects
+                      option(value=project.id) #{project.name}
                 div.form-group
-                  label(for='name') Task Description:
+                  label(for='description') Task Description:
                   textarea#desc.form-control(type='text', placeholder='Task Description' name='description')
                 div.form-group
                   label(for='sdate') Start Date:
@@ -31,16 +34,10 @@ block content
                   label(for='edate') End Date:
                   input#edate.form-control(type='text', placeholder='End Date' name='edate')
                 div.form-group
-                  label(for='pid') Project:
-                  select#pid.form-control(name='pid')
-                    each project in projects
-                        option(value=project.id) #{project.name}
-                div.form-group
                   label(for='user') Assign User:
-                  select#uid.form-control(name='uid')
-                      each user in users
-                          option(value=user.id) #{user.name}
-                  //input#uid.form-control(type='text' placeholder="Assign User" name='user')
+                  input#user.form-control(type='text' disabled)
+                div.form-group
+                  input#uid.form-control(type='hidden' name='uid')
                   br
                   br
                   button.btn.btn-primary(type='submit') Save

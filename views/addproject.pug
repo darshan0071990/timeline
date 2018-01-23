@@ -8,9 +8,17 @@ block content
                 form(method='POST' action='/project/createproject')
                     div.form-group
                         label(for='name') Project Name:
-                        input#name.form-control(type='text', placeholder='Project Name' name='name')
+                        input#name.form-control.col-xs-6(type='text', placeholder='Project Name' name='name')
                     div.form-group
                         label(for='color') Project Color:
-                        input#pw.form-control(type='text' name='color', placeholder='Color')
+                        input.form-control(type='text' value="" name='color', placeholder='Color' data-palette='["#D50000","#304FFE","#00B8D4","#00C853","#FFD600","#FF6D00","#FF1744","#3D5AFE","#00E5FF","#00E676","#FFEA00","#FF9100","#FF5252","#536DFE","#18FFFF","#69F0AE","#FFFF00","#FFAB40"]')
                     div.form-group
                         button.btn.btn-primary(type='submit') Save
+
+        script.
+            $('[name="color"]').paletteColorPicker({
+                insert: 'after',
+                clear_btn: 'last',
+                position: 'downside', // default -> 'upside'
+                close_all_but_this: true // Default is false
+            });

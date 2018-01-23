@@ -780,7 +780,7 @@ var TimelineView = /** @class */ (function (_super) {
         }
         var isChrono = labelInterval > this.slotDuration;
         var isSingleDay = this.slotDuration.as('days') === 1;
-        var html = '<table class="' + theme.getClass('tableGrid') + '">';
+        var html = '<table class="workheader ' + theme.getClass('tableGrid') + '">';
         html += '<colgroup>';
         for (var _a = 0, slotDates_2 = slotDates; _a < slotDates_2.length; _a++) {
             date = slotDates_2[_a];

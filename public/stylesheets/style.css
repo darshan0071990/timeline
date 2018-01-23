@@ -1,6 +1,6 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding: 45px;
+  font-family: Nunito Sans,sans-serif !important;
 }
 
 a {
@@ -8,5 +8,31 @@ a {
 }
 #bootstrapModalFullCalendar {
   max-width: 900px;
-  margin: 0px auto;
+margin: 0px auto;
+}
+/*.fc-cell-content .fc-cell-text{*/
+  /*color:#1dbf11;*/
+/*}*/
+.fc-head{
+  box-shadow: 0 2px 7px 0 rgba(0,0,0,.12);
+}
+.fc-divider {
+  width: 1px !important;
+  background: #D5D5D5;
+}
+.fc-time-area .fc-bg{
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXoAAAAUCAYAAACDKfYOAAAB4klEQVR4Xu2bQa6DMAxEyw2y5v5nY50b9Cv6RaWsbDYejx5L5Ci2x3m0jNiO43jv+769zK4553uMQV1NdEWvJkJ90lzcGGP8JD3nfHW/t2pYV/c6Vg1XPTZA3+uAAUT0UujA4oYjEE84Ojy0rrAH9AqnJpEDoE80SyDUVa/zF70bEK/1ONUG6AVgkEnBFRzUlZmC+tjrqxsnIN7/pbjUBujrz0wqA4CYald5sKte93f0LkB0rQPQl6Mgl4ArOKgrNwfV0Zixv2bnqYfqgwLQV5+Y5P4AMdmw4nBXvTBj/wdLFez3Bw+gLwZBdntXcFBXdhJq4zFjv/3vAHtAX3te0rsDxHTLShe46oUZ2+sbAkBfioH85q7goK78LFSuwIzt9XEYoK88LQ/2BogPmla4xFUvzNg+7+fX+AP6Qgg82doVHNT1ZBrq1mDGYsbWTd9lZ8AhIUM4CfQKt0oiEDMWM1ZiEAGHhAzhJNAr3CqJQMxYzFiJQQQcEjKEk0CvcKskAjFjMWMlBhFwSMgQTgK9wq2SCMSMxYyVGETAISFDOAn0CrdKIhAzFjNWYhABh4QM4STQK9wqiUDMWMxYiUEEHBIyhJNAr3CrJAIxYzFjJQYRcEjIEE4CvcKtkgjEjO1lxv4BXybtQ1gMhTUAAAAASUVORK5CYII=");
+    background-size: 399px 48px;
+    bottom: 0 !important;
+}
+.fc-scroller-canvas > .fc-content {
+    background: white;
+}
+
+.fc-time-area .fc-scroller-canvas .fc-content{
+    background: transparent;
+}
+
+.workheader{
+    background: white;
 }

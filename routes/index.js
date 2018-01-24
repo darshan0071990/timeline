@@ -26,7 +26,12 @@ router.get('/bootstrap', function(req, res, next) {
 
 router.get('/events',function(req,res,next){
     var event = [];
-    models.tasks.findAll().then(function (taskdata,err) {
+    models.tasks.findAll({
+        include: [{// Notice `include` takes an ARRAY
+            model: models.projects,
+        }]
+    }).then(function (taskdata,err) {
+        console.log("Darshan 1"+taskdata);
         taskdata.forEach(function(item){
             event.push({
                 "id":item.id,
@@ -42,6 +47,8 @@ router.get('/events',function(req,res,next){
             });
         });
         res.json(event);
+    }).catch(function(e) {
+        console.log('Darshan error'+e);
     });
 
 
@@ -73,7 +80,10 @@ router.post('/createtask',function(req,res,next){
     var uid = req.body.uid;
 
     models.tasks.create({ name: name, description: description, sdate: sdate, edate: edate, pid: pid, uid: uid }).then(task => {
+            console.log(task);
             res.redirect('/bootstrap');
+    }).catch(function() {
+        console.log('Ankita error');
     });
 });
 

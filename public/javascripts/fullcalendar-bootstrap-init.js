@@ -13,7 +13,7 @@ $(function() {
             center: 'title',
             right:"",
         },
-        defaultView: 'timelineYear',
+        defaultView: 'timelineMonth',
         resourceLabelText: 'Users',
         resources: '/user/fetchUsers',
 		events: '/events/',

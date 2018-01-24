@@ -1,27 +1,35 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-    var Task = sequelize.define('tasks', {
-        id: {
-              type: DataTypes.INTEGER,
-              autoIncrement: true,
-              primaryKey: true
-        },
-        name: DataTypes.STRING,
-        description: DataTypes.STRING,
-        sdate: DataTypes.DATE,
-        edate: DataTypes.DATE,
-        pid: DataTypes.INTEGER,
-        uid: DataTypes.INTEGER
-    });
+    const task = sequelize.define('tasks',
+        {
+            id: {
+                  type: DataTypes.INTEGER,
+                  autoIncrement: true,
+                  primaryKey: true
+            },
+            name: DataTypes.STRING,
+            description: DataTypes.STRING,
+            sdate: DataTypes.DATE,
+            edate: DataTypes.DATE,
+        });
 
-    // Project.associate = function (models) {
-    //     models.Task.belongsTo(models.Task, {
-    //         onDelete: "CASCADE",
-    //         foreignKey: {
-    //             allowNull: false
-    //         }
-    //     });
-    // };
+        task.associate = function (models) {
+            task.belongsTo(models.projects, {
+                targetkey: 'id',
+                foreignKey: {
+                    name: 'pid',
+                    allowNull: true,
+                },
+                constraints: false
+            });
 
-    return Task;
+            task.belongsTo(models.users,{
+                foreignKey: {
+                    name: 'uid',
+                    allowNull: false
+                }
+            });
+        };
+
+    return task;
 };

@@ -18,6 +18,9 @@ block content
             .col-md-9.col-md-offset-1
               form(method='POST' action='/createtask')
                 div.form-group
+                  label(for='name') Task Name:
+                  input#task_name.form-control(type="text", placeholder="Task Name", name="name")
+                div.form-group
                   label(for='pid') Project:
                   select#pid.form-control(name='pid')
                     option(value="") Select Project

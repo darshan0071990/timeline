@@ -1,24 +1,26 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-    var User = sequelize.define('users', {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true
-        },
-        name: DataTypes.STRING,
-        email: DataTypes.STRING,
-        password: DataTypes.STRING
-    });
+    const users = sequelize.define('users',
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                primaryKey: true
+            },
+            name: DataTypes.STRING,
+            email: DataTypes.STRING,
+            password: DataTypes.STRING
+        });
 
-    // Project.associate = function (models) {
-    //     models.Task.belongsTo(models.Task, {
-    //         onDelete: "CASCADE",
-    //         foreignKey: {
-    //             allowNull: false
-    //         }
-    //     });
-    // };
+        users.associate = function (models) {
+            users.hasMany(models.tasks, {
+                foreignKey: {
+                    name: 'uid',
+                    allowNull: false
+                },
+                constraints: false
+            });
+        };
 
-    return User;
+    return users;
 };

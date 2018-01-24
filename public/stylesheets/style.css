@@ -1,5 +1,4 @@
 body {
-  padding: 45px;
   font-family: Nunito Sans,sans-serif !important;
 }
 
@@ -8,7 +7,7 @@ a {
 }
 #bootstrapModalFullCalendar {
   max-width: 900px;
-margin: 0px auto;
+    margin: 0px auto;
 }
 /*.fc-cell-content .fc-cell-text{*/
   /*color:#1dbf11;*/
@@ -35,4 +34,12 @@ margin: 0px auto;
 
 .workheader{
     background: white;
+}
+.modal-backdrop {
+    z-index: -1 !important;
+}
+.fc-highlight {
+    background: #99fa42 !important;
+    opacity: 0.85 !important;
+    box-shadow: 0 10px 20px -12px rgba(0, 0, 0, 0.42), 0 3px 20px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
 }

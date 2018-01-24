@@ -13,11 +13,11 @@ $(function() {
             center: 'title',
             right:"",
         },
+        weekNumberTitle: 'w',
         defaultView: 'timelineMonth',
         resourceLabelText: 'Users',
         resources: '/user/fetchUsers',
 		events: '/events/',
-
         navLinks: true, // can click day/week names to navigate views
         selectable: true,
         selectHelper: true,
@@ -25,15 +25,19 @@ $(function() {
 		   $('#modalTitle').html(event.title);
 		   $('#modalBody').html(event.description);
 		   $('#eventUrl').attr('href',event.url);
-		   $('#fullCalModal').modal();
+		   $('#fullCalModal').appendTo("body").modal('show');
 		   return false;
 		},
 		select: function(start, end, jsEvent, view,resource) {
 	 		$('#fullCalModal').modal();
-            $('#sdate').attr('value', moment(start).format());
-         	$('#edate').attr('value',moment(end).subtract(1, "days").format());
+            $('#sdate').attr('value', moment(start).format("DD-MM-YYYY"));
+         	$('#edate').attr('value',moment(end).subtract(1, "days").format("DD-MM-YYYY"));
 			$('#uid').attr('value',resource.id);
 			$('#user').attr('value',resource.title);
     }
 	});
+
+
+    $('#sdate').datepicker({ dateFormat: 'dd-mm-yy' });
+    $('#edate').datepicker({ dateFormat: 'dd-mm-yy' });
 });

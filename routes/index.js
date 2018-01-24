@@ -1,6 +1,7 @@
 var express = require('express');
 var router  = express.Router();
 var path    = require('path');
+var moment = require('moment');
 var models  = require('./../models');
 
 var calendarController = require(path.resolve(__dirname, 'calendar-controller'));
@@ -31,19 +32,18 @@ router.get('/events',function(req,res,next){
             model: models.projects,
         }]
     }).then(function (taskdata,err) {
-        console.log("Darshan 1"+taskdata);
         taskdata.forEach(function(item){
             event.push({
                 "id":item.id,
-                "title":"DW",
+                "title":item.name+"\n"+item.project.name,
                 "allday":"true",
                 "resourceId":item.uid,
-                "borderColor":"#5173DA",
-                "color":"#99ABEA",
-                "textColor":"#000000",
+                "borderColor":item.project.color,
+                "color":item.project.color,
+                "textColor":"#201a32",
                 "description":item.description,
-                "start": item.sdate,
-                "end": item.edate,
+                "start": moment(item.sdate).format("YYYY-MM-DD"),
+                "end": moment(item.edate).format("YYYY-MM-DD")
             });
         });
         res.json(event);
@@ -64,7 +64,7 @@ router.get('/jquery', function(req, res, next) {
 router.get('/gcal', function(req, res, next) {
   res.render('google-calendar', {
   	title: 'Express',
-  	'googleCalendar': true,
+'googleCalendar': true,
 
   	GOOGLE_KEY: process.env.GOOGLE_CALENDAR_API_KEY,
   	GOOGLE_CLIENT: process.env.GOOGLE_CALENDAR_CLIENT_ID
@@ -74,14 +74,12 @@ router.get('/gcal', function(req, res, next) {
 router.post('/createtask',function(req,res,next){
     var name = req.body.name;
     var description = req.body.description;
-    var sdate = req.body.sdate;
-    var edate = req.body.edate;
+    var sdate = moment(req.body.sdate,'DD-MM-YYYY').format("YYYY-MM-DD");
+    var edate = moment(req.body.edate,'DD-MM-YYYY').format("YYYY-MM-DD");
     var pid = req.body.pid;
     var uid = req.body.uid;
-
     models.tasks.create({ name: name, description: description, sdate: sdate, edate: edate, pid: pid, uid: uid }).then(task => {
-            console.log(task);
-            res.redirect('/bootstrap');
+        res.redirect('/bootstrap');
     }).catch(function() {
         console.log('Ankita error');
     });

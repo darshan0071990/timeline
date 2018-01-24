@@ -1,46 +1,41 @@
 extends layout
 block content
-  .row
-      br
-      #calander
-
-  // Modal Code from the creating tasks
-  #fullCalModal.modal.fade
-    .modal-dialog
+  #calander
+    // Modal Code from the creating tasks
+  div#fullCalModal.modal.fade(tabindex=-1 role=dialog aria-hidden=true)
+    .modal-dialog.modal-sm
       .modal-content
-        .modal-header Task
-          button.close(type='button', data-dismiss='modal')
-            span(aria-hidden='true') ×
-            span.sr-only close
-          h4#modalTitle.modal-title
-        #modalBody.modal-body
-          .row
-            .col-md-9.col-md-offset-1
-              form(method='POST' action='/createtask')
-                div.form-group
-                  label(for='name') Task Name:
-                  input#task_name.form-control(type="text", placeholder="Task Name", name="name")
-                div.form-group
-                  label(for='pid') Project:
-                  select#pid.form-control(name='pid')
-                    option(value="") Select Project
-                    for project in projects
-                      option(value=project.id) #{project.name}
-                div.form-group
-                  label(for='description') Task Description:
-                  textarea#desc.form-control(type='text', placeholder='Task Description' name='description')
-                div.form-group
-                  label(for='sdate') Start Date:
-                  input#sdate.form-control(type='text', placeholder='Start Date' name='sdate')
-                div.form-group
-                  label(for='edate') End Date:
-                  input#edate.form-control(type='text', placeholder='End Date' name='edate')
-                div.form-group
-                  label(for='user') Assign User:
-                  input#user.form-control(type='text' disabled)
-                div.form-group
-                  input#uid.form-control(type='hidden' name='uid')
-                  br
-                  br
-                  button.btn.btn-primary(type='submit') Save
-                  button.btn.btn-default(type='button', data-dismiss='modal') Close
+        form#task-form(method='POST' action='/createtask')
+          .modal-header
+            button.close(type='button', data-dismiss='modal' aria-hidden=true)
+              span(aria-hidden='true') ×
+              span.sr-only close
+            h4.modal-title Task
+          #modalBody.modal-body
+            div.form-group.label-floating
+              label.control-label(for='name') Task Name:
+              input#task_name.form-control(type="text", name="name" required)
+            div.form-group.label-floating
+              label.control-label(for='description') Task Description:
+              textarea#desc.form-control(type='text' name='description')
+            div.form-group.label-floating
+              label.control-label(for='pid') Project:
+              select#pid.form-control(name='pid' required)
+                option(value="") Select Project
+                for project in projects
+                  option(value=project.id) #{project.name}
+            .row
+              div.form-group.col-sm-6.label-floating
+                label.control-label(for='sdate') Start Date:
+                input#sdate.datepicker.form-control(type='text', placeholder='Start Date' name='sdate' readonly="readonly" )
+              div.form-group.col-sm-6.label-floating
+                label.control-label(for='edate') End Date:
+                input#edate.datepicker.form-control(type='text', placeholder='End Date' name='edate' readonly="readonly" )
+            div.form-group.label-floating
+              label.control-label(for='user') Assign User:
+              input#user.form-control(type='text' disabled)
+            div.form-group
+              input#uid.form-control(type='hidden' name='uid')
+          .modal-footer
+            button.btn.btn-info(type='submit') Save
+            button.btn.btn-default(type='button', data-dismiss='modal') Close

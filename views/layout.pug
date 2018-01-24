@@ -10,41 +10,37 @@ html
     link(rel='stylesheet', href='https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css')
     link(rel='stylesheet', href='/stylesheets/scheduler.css')
     link(rel='stylesheet', href='/stylesheets/palette-color-picker.css')
+    link(rel='stylesheet', href='/stylesheets/material-kit.css')
 
     include scripts
   body
-    block content
     // Fixed navbar
-nav.navbar.navbar-default.navbar-fixed-top
-  .container
-    .navbar-header
-      button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
-        span.sr-only Toggle navigation
-        span.icon-bar
-        span.icon-bar
-        span.icon-bar
-      a.navbar-brand(href='/bootstrap') Timeline
-    #navbar.collapse.navbar-collapse
-      ul.nav.navbar-nav
-        li.dropdown
-          a.dropdown-toggle( href="#", data-toggle="dropdown", role="button", aria-expanded="false" ) Projects
-            span.caret
-          ul.dropdown-menu( role="menu" )
-            li: a( href="/project" ) Project Lists
-            li: a( href="/project/addproject" ) Create Project
-        li.dropdown
-          a.dropdown-toggle( href="#", data-toggle="dropdown", role="button", aria-expanded="false" ) Users
-            span.caret
-          ul.dropdown-menu( role="menu" )
-            li: a( href="/user" ) Users Lists
-            li: a( href="/user/adduser" ) Add User
+    nav.navbar.navbar-info.navbar-fixed-top
+      .container
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='/bootstrap') Timeline
+        #navbar.collapse.navbar-collapse
+          ul.nav.navbar-nav
+            li.dropdown
+              a.dropdown-toggle( href="#", data-toggle="dropdown", role="button", aria-expanded="false" ) Projects
+                span.caret
+              ul.dropdown-menu( role="menu" )
+                li: a( href="/project" ) Project Lists
+                li: a( href="/project/addproject" ) Create Project
+            li.dropdown
+              a.dropdown-toggle( href="#", data-toggle="dropdown", role="button", aria-expanded="false" ) Users
+                span.caret
+              ul.dropdown-menu( role="menu" )
+                li: a( href="/user" ) Users Lists
+                li: a( href="/user/adduser" ) Add User
 
+    div.main.main-raised
+      block content
 
     if bootstrap
       include partials/scripts-fullcalendar
-
-    //if googleCalendar
-    //  include partials/scripts-google-calendar
-    //
-    //if jqueryui
-    //  include partials/scripts-jquery-ui

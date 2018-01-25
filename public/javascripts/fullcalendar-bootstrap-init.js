@@ -15,6 +15,7 @@ $(function() {
             right:"",
         },
         weekNumberTitle: 'w',
+        displayEventTime: false,
         defaultView: 'timelineMonth',
         resourceLabelText: 'Users',
         resources: '/user/fetchUsers',
@@ -36,17 +37,38 @@ $(function() {
 			$('#uid').attr('value',resource.id);
 			$('#user').attr('value',resource.title);
         },
-        eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
-            alert(
-                event.title + " was moved " +
-                dayDelta + " days and " +
-                minuteDelta + " minutes."
-            );
-            console.log(event);
+        eventDrop: function(event, delta, revertFunc, jsEvent, ui, view) {
+            event_changeHandler(event, delta, revertFunc);
         }
 	});
 
 
     $('#sdate').datepicker({ dateFormat: 'dd-mm-yy' });
     $('#edate').datepicker({ dateFormat: 'dd-mm-yy' });
+
+    function event_changeHandler(event, delta, revertFunc) {
+        var start = moment(event.start).subtract(1,"days").format('YYYY-MM-DD');
+        var end = moment(event.end).format('YYYY-MM-DD');
+        $.ajax({
+            url: "/checkanotherevent",
+            type: "POST",
+            dataType: "json",
+            data: {'start':start, "uid": event.resourceId},
+            success: function(data){
+                var response = jQuery.parseJSON(JSON.stringify(data));
+                if(response[0] != undefined){
+                    if (confirm("Do you want to link this Task  to "+ response[0].name + " ?")) {
+                        return true;
+                    } else {
+                        revertFunc();
+                    }
+                }else{
+                    revertFunc();
+                }
+            },
+            error: function (error) {
+                return false;
+            }
+        });
+    }
 });

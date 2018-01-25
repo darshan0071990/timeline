@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
             },
             name: DataTypes.STRING,
             description: DataTypes.STRING,
-            sdate: DataTypes.DATE,
-            edate: DataTypes.DATE,
+            sdate: DataTypes.DATEONLY,
+            edate: DataTypes.DATEONLY,
         });
 
         task.associate = function (models) {

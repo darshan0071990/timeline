@@ -42,8 +42,8 @@ router.get('/events',function(req,res,next){
                 "color":item.project.color,
                 "textColor":"#201a32",
                 "description":item.description,
-                "start": moment(item.sdate).format("YYYY-MM-DD"),
-                "end": moment(item.edate).format("YYYY-MM-DD")
+                "start": moment(item.sdate+" 00:00:00").format("YYYY-MM-DD HH:mm:ss"),
+                "end": moment(item.edate+" 23:59:59").format("YYYY-MM-DD HH:mm:ss")
             });
         });
         res.json(event);
@@ -56,17 +56,28 @@ router.get('/events',function(req,res,next){
 
 
 router.post('/createtask',function(req,res,next){
-    var name = req.body.name;
-    var description = req.body.description;
     var sdate = moment(req.body.sdate,'DD-MM-YYYY').format("YYYY-MM-DD");
-    var edate = moment(req.body.edate,'DD-MM-YYYY').add(1, "days").format("YYYY-MM-DD");
-    var pid = req.body.pid;
-    var uid = req.body.uid;
-    models.tasks.create({ name: name, description: description, sdate: sdate, edate: edate, pid: pid, uid: uid }).then(task => {
+    var edate = moment(req.body.edate,'DD-MM-YYYY').format("YYYY-MM-DD");
+    models.tasks.create({ name: req.body.name, description: req.body.description, sdate: sdate, edate: edate, pid: req.body.pid, uid: req.body.uid }).then(task => {
         res.redirect('/bootstrap');
     }).catch(function() {
         console.log('Ankita error');
     });
+});
+
+router.post('/checkanotherevent',function(req,res,next) {
+
+    models.tasks.findAll({
+        where: {
+            uid: req.body.uid,
+            edate: req.body.start,
+        }
+    })
+    .then(data => {
+        res.json(data);
+    })
+    .catch(function(e){console.log("error")});
+
 });
 
 router.get('/calendarJSON', calendarController.calendarJSON);

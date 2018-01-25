@@ -15,7 +15,7 @@ router.get('/bootstrap', function(req, res, next) {
     models.projects.findAll().then(function (project,err) {
         models.users.findAll().then(function(user,err){
             res.render('bootstrap', {
-                title: 'Express',
+                title: 'TImeline',
                 bootstrap: true,
                 projects:project,
                 users:user,
@@ -54,28 +54,12 @@ router.get('/events',function(req,res,next){
 
 });
 
-router.get('/jquery', function(req, res, next) {
-  res.render('jqueryui', {
-  	title: 'Express',
-  	'jqueryui': true
-  });
-});
-
-router.get('/gcal', function(req, res, next) {
-  res.render('google-calendar', {
-  	title: 'Express',
-'googleCalendar': true,
-
-  	GOOGLE_KEY: process.env.GOOGLE_CALENDAR_API_KEY,
-  	GOOGLE_CLIENT: process.env.GOOGLE_CALENDAR_CLIENT_ID
-  });
-});
 
 router.post('/createtask',function(req,res,next){
     var name = req.body.name;
     var description = req.body.description;
     var sdate = moment(req.body.sdate,'DD-MM-YYYY').format("YYYY-MM-DD");
-    var edate = moment(req.body.edate,'DD-MM-YYYY').format("YYYY-MM-DD");
+    var edate = moment(req.body.edate,'DD-MM-YYYY').add(1, "days").format("YYYY-MM-DD");
     var pid = req.body.pid;
     var uid = req.body.uid;
     models.tasks.create({ name: name, description: description, sdate: sdate, edate: edate, pid: pid, uid: uid }).then(task => {

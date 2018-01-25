@@ -7,6 +7,7 @@ $(function() {
         now: moment().format(),
         editable: true, // enable draggable events
         aspectRatio: 2.3,
+        resourceAreaWidth: '10%',
         scrollTime: '00:00', // undo default 6am scrollTime
         header: {
             left: 'today prev,next',
@@ -34,7 +35,15 @@ $(function() {
          	$('#edate').attr('value',moment(end).subtract(1, "days").format("DD-MM-YYYY"));
 			$('#uid').attr('value',resource.id);
 			$('#user').attr('value',resource.title);
-    }
+        },
+        eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+            alert(
+                event.title + " was moved " +
+                dayDelta + " days and " +
+                minuteDelta + " minutes."
+            );
+            console.log(event);
+        }
 	});
 
 

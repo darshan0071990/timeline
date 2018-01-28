@@ -10,10 +10,8 @@ var db        = {};
 
 var sequelize;
 if (config.use_env_variable) {
-    console.log("in IF");
     sequelize = new Sequelize(process.env[config.use_env_variable]);
 } else {
-    console.log("in ELSE");
     sequelize = new Sequelize(
         config.database, config.username, config.password, config
     );

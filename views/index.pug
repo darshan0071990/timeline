@@ -1,20 +1,82 @@
 extends layout
-
 block content
-  h1= title
-  p Welcome to #{title}
+  #calander
+    // Modal Code from the creating tasks
+  div#fullCalModal.modal.fade(tabindex=-1 role=dialog aria-hidden=true)
+    .modal-dialog.modal-sm
+      .modal-content
+        form#task-form(method='POST' action='/createtask')
+          .modal-header
+            button.close(type='button', data-dismiss='modal' aria-hidden=true)
+              span(aria-hidden='true') ×
+              span.sr-only close
+            h4.modal-title Task
+          #modalBody.modal-body
+            div.form-group.label-floating
+              label.control-label(for='name') Task Name:
+              input#task_name.form-control(type="text", name="name" required)
+            div.form-group.label-floating
+              label.control-label(for='description') Task Description:
+              textarea#desc.form-control(type='text' name='description')
+            div.form-group.label-floating
+              label.control-label(for='pid') Project:
+              select#pid.form-control(name='pid' required)
+                option(value="") Select Project
+                for project in projects
+                  option(value=project.id) #{project.name}
+            .row
+              div.form-group.col-sm-6.label-floating
+                label.control-label(for='sdate') Start Date:
+                input#sdate.datepicker.form-control(type='text', placeholder='Start Date' name='sdate' readonly="readonly" )
+              div.form-group.col-sm-6.label-floating
+                label.control-label(for='edate') End Date:
+                input#edate.datepicker.form-control(type='text', placeholder='End Date' name='edate' readonly="readonly" )
+            div.form-group.label-floating
+              label.control-label(for='user') Assign User:
+              input#user.form-control(type='text' disabled)
+            div.form-group
+              input#uid.form-control(type='hidden' name='uid')
+          .modal-footer
+            button.btn.btn-info(type='submit') Save
+            button.btn.btn-default(type='button', data-dismiss='modal') Close
 
-  .row
-    .col-xs-12
-      h1 FullCalendar Demos
-      br
-  .row
-    .col-xs-12.col-sm-4
-      p
-        a.btn.btn-primary.btn-lg(href='/bootstrap/', role='button') Bootstrap Modal
-    .col-xs-12.col-sm-4
-      p
-        a.btn.btn-primary.btn-lg(href='/jquery/', role='button') jQuery UI Modal
-    .col-xs-12.col-sm-4
-      p
-        a.btn.btn-primary.btn-lg(href='/gcal/', role='button') gCal.js w/ Bootstrap Modal
+  div#fullEditCalModal.modal.fade(tabindex=-1 role=dialog aria-hidden=true)
+    .modal-dialog.modal-sm
+      .modal-content
+        form#task-edit-form(method='POST' action='/updatetask')
+          .modal-header
+            button.close(type='button', data-dismiss='modal' aria-hidden=true)
+              span(aria-hidden='true') ×
+              span.sr-only close
+            h4.modal-title Task
+          #modalEditBody.modal-body
+            div.form-group.label-floating
+              label.control-label(for='name') Task Name:
+              input#task-edit-name.form-control(type="text", name="name" required)
+            div.form-group.label-floating
+              label.control-label(for='description') Task Description:
+              textarea#task-edit-desc.form-control(type='text' name='description')
+            div.form-group.label-floating
+              label.control-label(for='pid') Project:
+              select#task-edit-pid.form-control(name='pid' required)
+                option(value="") Select Project
+                for project in projects
+                  option(value=project.id) #{project.name}
+            .row
+              div.form-group.col-sm-6.label-floating
+                label.control-label(for='sdate') Start Date:
+                input#task-edit-sdate.datepicker.form-control(type='text', placeholder='Start Date' name='sdate' readonly="readonly" )
+              div.form-group.col-sm-6.label-floating
+                label.control-label(for='edate') End Date:
+                input#task-edit-edate.datepicker.form-control(type='text', placeholder='End Date' name='edate' readonly="readonly" )
+            div.form-group.label-floating
+              label.control-label(for='user') Assign User:
+              input#task-edit-user.form-control(type='text' disabled)
+            div.form-group
+              input#task-edit-uid.form-control(type='hidden' name='uid')
+            div.form-group
+              input#task-id.form-control(type='hidden' name='id')
+          .modal-footer
+            button.btn.btn-info(type='submit') Update
+            button#delete_task.btn.btn-danger(type='button') Delete
+            button.btn.btn-default(type='button', data-dismiss='modal') Close

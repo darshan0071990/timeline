@@ -4,27 +4,27 @@ var path    = require('path');
 var moment = require('moment');
 var models  = require('./../models');
 
-var calendarController = require(path.resolve(__dirname, 'calendar-controller'));
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
     models.projects.findAll().then(function (project,err) {
         models.users.findAll().then(function(user,err){
             res.render('index', {
                 title: 'Timeline',
-                bootstrap: true,
                 projects:project,
                 users:user,
-                'jqueryui': true
             });
+        }).catch(function(e){
+            res.render('error');
         });
+    }).catch(function (e) {
+        res.render('error');
     });
 });
 
 router.get('/events',function(req,res,next){
     var event = [];
     models.tasks.findAll({
-        include: [{// Notice `include` takes an ARRAY
+        include: [{
             model: models.projects,
         }]
     }).then(function (taskdata,err) {
@@ -44,20 +44,25 @@ router.get('/events',function(req,res,next){
         });
         res.json(event);
     }).catch(function(e) {
-        console.log('Darshan error'+e);
+        res.render('error');
     });
-
-
 });
 
 
 router.post('/createtask',function(req,res,next){
     var sdate = moment(req.body.sdate,'DD-MM-YYYY').format("YYYY-MM-DD");
     var edate = moment(req.body.edate,'DD-MM-YYYY').format("YYYY-MM-DD");
-    models.tasks.create({ name: req.body.name, description: req.body.description, sdate: sdate, edate: edate, pid: req.body.pid, uid: req.body.uid }).then(task => {
+    models.tasks.create({
+        name: req.body.name,
+        description: req.body.description,
+        sdate: sdate,
+        edate: edate,
+        pid: req.body.pid,
+        uid: req.body.uid })
+    .then(task => {
         res.redirect('/');
     }).catch(function() {
-        console.log('Ankita error');
+        res.render("error");
     });
 });
 
@@ -74,7 +79,7 @@ router.post('/updatetask',function(req,res,next){
     }, {where: {id:req.body.id}}).then(task => {
         res.redirect('/');
     }).catch(function() {
-        console.log('Ankita error');
+        res.render("error");
     });
 });
 
@@ -82,7 +87,13 @@ router.post('/updatetask',function(req,res,next){
 router.post('/checkanotherevent',function(req,res,next) {
     var query = "SELECT id, name, sdate, edate, uid FROM tasks AS tasks WHERE tasks.id <> '"+req.body.id+"' AND tasks.uid = '"+req.body.uid+"' AND '"+req.body.start+"' >= tasks.sdate AND '"+req.body.start+"' <=tasks.edate;";
 
-    models.sequelize.query(query, { model: models.tasks,raw:true }).then(data=>{ console.log(data);res.json(data);}).catch(error=>{console.log(error)});
+    models.sequelize.query(query, { model: models.tasks,raw:true })
+    .then(data=>{
+        res.json(data);
+    })
+    .catch(error=>{
+        console.log(error);
+    });
 });
 
 router.get('/fetchTask/:id',function (req,res,next) {
@@ -108,7 +119,7 @@ router.get('/deleteTask/:id',function (req,res,next) {
     models.tasks.destroy({
         where: {id: id},
     })
-        .then(task => {
+    .then(task => {
         res.json(true);
     })
     .catch(error =>{
@@ -128,7 +139,6 @@ router.post('/shiftEvent',function (req,res,next) {
 });
 
 router.post('/linkEvent',function (req,res,next) {
-    console.log(req.body.oid + " "+ req.body.nid);
     models.tasks.findOne({
         where: {id: req.body.oid},
         raw:true

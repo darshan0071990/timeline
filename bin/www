@@ -3,9 +3,8 @@
 /**
  * Module dependencies.
  */
-
 var app = require('../app');
-var debug = require('debug')('fullcalendar-node2:server');
+// var debug = require('debug')('fullcalendar-node2:server');
 var http = require('http');
 var models = require('../models');
 /**

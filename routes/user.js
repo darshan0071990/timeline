@@ -32,16 +32,5 @@ router.get('/fetchUsers',function(req,res,next){
         res.send(data);
     })
 });
-    // sql.sync()
-    //     .then(() => User.create({
-    //     name:req.body.name,
-    //     email: req.body.email
-    // })).then(function (data) {
-    //     res.redirect('/users');
-    // }).error(function(err){
-    //     res.send("Not Success");
-    // });
-
-
 
 module.exports = router;

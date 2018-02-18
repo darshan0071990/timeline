@@ -118,7 +118,11 @@ $(function () {
                     if (confirm("Do you want to link this Task  to " + response[0].name + " ?")) {
                         linkEvent(response[0].id, event.id);
                     } else {
-                        revertFunc();
+                        if(confirm("Do you want move this Task to "+ showDate + " ?")){
+                            shiftEvent(event,start,end);
+                        }else{
+                            revertFunc();
+                        }
                     }
                 } else {
                     var confirm_msg = "";

@@ -29,6 +29,20 @@ module.exports = (sequelize, DataTypes) => {
                     allowNull: false
                 }
             });
+
+            task.hasOne(models.linktasks,{
+                foreignKey: {
+                    name: 'basetask_id',
+                    allowNull: false
+                }
+            });
+
+            task.hasOne(models.linktasks,{
+                foreignKey: {
+                    name: 'linktask_id',
+                    allowNull: false
+                }
+            });
         };
 
     return task;

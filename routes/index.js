@@ -148,24 +148,33 @@ router.post('/linkEvent',function (req,res,next) {
             where: {id: req.body.nid},
             raw:true
         }).then(data => {
-            var start_date = moment(data.sdate,"YYYY-MM-DD");
-            var end_date = moment(data.edate,"YYYY-MM-DD");
-            var diff_days = end_date.diff(start_date,'days');
-            var final_end_day = moment(edate,"YYYY-MM-DD").add(diff_days,'days').format("YYYY-MM-DD");
-            models.tasks.update(
-                {sdate: edate, edate: final_end_day},
-                {where: {id: req.body.nid}}
-            ).then(result=> {
-                res.json(true);
-            }).catch(error=>{
-                res.json(false);
+            models.linktasks.create({
+                basetask_id: req.body.oid,
+                linktask_id: req.body.nid })
+                .then(task => {
+                    var start_date = moment(data.sdate,"YYYY-MM-DD");
+                    var end_date = moment(data.edate,"YYYY-MM-DD");
+                    var diff_days = end_date.diff(start_date,'days');
+                    var final_end_day = moment(edate,"YYYY-MM-DD").add(diff_days,'days').format("YYYY-MM-DD");
+                    models.tasks.update(
+                        {sdate: edate, edate: final_end_day},
+                        {where: {id: req.body.nid}}
+                    ).then(result=> {
+                        res.json(true);
+                    }).catch(error=>{res.json(false);});
+                }).catch(function() {console.log(error);});
             });
-        })
-        .catch(error => {console.log(error)});
-    })
-    .catch(error =>{
-            console.log(error);
-    });
+    }).catch(error => {console.log(error)});
+});
+
+router.post('/checkLinked',function (req,res,next) {
+   models.linktasks.findOne({where: {basetask_id: req.body.basetask_id}})
+       .then(links => {
+           if(links != null)
+               res.json(links.linktask_id);
+           else
+               res.json(false);
+   }).catch(error => {console.log(error)});
 });
 
 module.exports = router;

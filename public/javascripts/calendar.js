@@ -45,6 +45,11 @@ $(function () {
         eventRender: function (event, element, view) {
             // eventChecklink(event.id);
             $(".fc-highlight-container").first().remove();
+        },
+        eventDragStart: function (event) {
+            console.log(event);
+            $(this).append($($(this).next()));
+            moveLinkedEvents(event);
         }
     });
 
@@ -52,6 +57,15 @@ $(function () {
         $("#task-edit-form").trigger("reset");
         $("#task-form").trigger("reset");
     });
+
+    $("a").on("mousemove", function () {
+        //debugger;
+        $(this).append($(this).next());
+    });
+    $("a").mousemove (function () {
+        $(this).next().trigger("move");
+        //debugger;
+    })
 
     function showEditModal(id) {
         $.ajax({
@@ -186,7 +200,7 @@ $(function () {
     function eventChecklink(id) {
         $.ajax({
             url: "/checkLinked",
-            type: "POST",
+            type: "GET",
             dataType: "json",
             data: {'basetask_id': id},
             success: function (data) {
@@ -197,5 +211,17 @@ $(function () {
                 alert("Something went wrong, Please try again later.");
             }
         });
+    }
+    function moveLinkedEvents(event) {
+        // $.ajax({
+        //     url: "/linkEvent/" + event.id,
+        //     type: "GET",
+        //     dataType: "json",
+        //     success: function (data) {
+        //         var response = jQuery.parseJSON(JSON.stringify(data));
+        //         console.log(response)
+        //     }
+        // });
+        var linkedevents = eventChecklink(event.id);
     }
 });

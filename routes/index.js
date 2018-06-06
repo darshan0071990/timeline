@@ -167,14 +167,32 @@ router.post('/linkEvent',function (req,res,next) {
     }).catch(error => {console.log(error)});
 });
 
-router.post('/checkLinked',function (req,res,next) {
-   models.linktasks.findOne({where: {basetask_id: req.body.basetask_id}})
+router.get('/checkLinked',function (req,res,next) {
+   models.linktasks.findOne({where: {basetask_id: req.param.basetask_id}})
        .then(links => {
            if(links != null)
                res.json(links.linktask_id);
            else
                res.json(false);
    }).catch(error => {console.log(error)});
+});
+
+router.get('/linkEvent/:id',function (req,res,next) {
+    var id = req.params.id;
+    models.tasks.findOne({
+        where: {id: id},
+        include: [
+            {model: models.tasks,
+            }],
+        raw:true
+    })
+        .then(task => {
+        console.log(task);
+    res.json(task);
+})
+.catch(error =>{
+        console.log(error);
+});
 });
 
 module.exports = router;

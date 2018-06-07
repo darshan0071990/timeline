@@ -167,8 +167,9 @@ router.post('/linkEvent',function (req,res,next) {
     }).catch(error => {console.log(error)});
 });
 
-router.get('/checkLinked',function (req,res,next) {
-   models.linktasks.findOne({where: {basetask_id: req.param.basetask_id}})
+router.get('/checkLinked/:id',function (req,res,next) {
+    models.linktasks.find({
+        where: {basetask_id: req.params.id}})
        .then(links => {
            if(links != null)
                res.json(links.linktask_id);

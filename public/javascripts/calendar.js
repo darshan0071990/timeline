@@ -43,15 +43,57 @@ $(function () {
             event_changeHandler(event, delta, revertFunc, "resize");
         },
         eventRender: function (event, element, view) {
-            // eventChecklink(event.id);
             $(".fc-highlight-container").first().remove();
+            element.attr("id",event.id);
         },
         eventDragStart: function (event) {
-            console.log(event);
-            $(this).append($($(this).next()));
-            moveLinkedEvents(event);
+            var thisForm = this;
+            $.ajax({
+                url: "/checkLinked/"+event.id,
+                success: function (data) {
+                    var response = jQuery.parseJSON(JSON.stringify(data));
+                    var cloned = $("#"+response).clone();
+                    var left = cloned.css("left");
+                    var right = cloned.css("right");
+                    var positive_right = Math.abs(parseInt(right));
+                    var cloned_width = positive_right - parseInt(left);
+
+                    console.log(cloned_width);
+                    console.log(right);
+                    $("#"+response).hide();
+                    $(thisForm).append(cloned);
+                    $("#"+response).css({"left":"284px", "width":cloned_width+"px"});
+
+
+                },
+                error: function (error) {
+                    var right= Math.abs(parseInt(left))+"px";
+                    alert("Something went wrong, Please try again later.");
+                    return 0;
+                }
+            });
         }
     });
+
+    function collision($div1, $div2) {
+        var x1 = $div1.offset().left;
+        var y1 = $div1.offset().top;
+        var h1 = $div1.outerHeight(true);
+        var w1 = $div1.outerWidth(true);
+        console.log(x1 +"   "+y1+"   "+h1+"   "+w1);
+        var b1 = y1 + h1;
+        var r1 = x1 + w1;
+        var x2 = $div2.offset().left;
+        var y2 = $div2.offset().top;
+        var h2 = $div2.outerHeight(true);
+        var w2 = $div2.outerWidth(true);
+        console.log(x2 +"   "+y2+"   "+h2+"   "+w2);
+        var b2 = y2 + h2;
+        var r2 = x2 + w2;
+
+        if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2) return false;
+        return true;
+    }
 
     $(".modal").on("hidden.bs.modal", function () {
         $("#task-edit-form").trigger("reset");
@@ -199,29 +241,20 @@ $(function () {
 
     function eventChecklink(id) {
         $.ajax({
-            url: "/checkLinked",
-            type: "GET",
-            dataType: "json",
-            data: {'basetask_id': id},
+            url: "/checkLinked/"+id,
             success: function (data) {
                 var response = jQuery.parseJSON(JSON.stringify(data));
-
+                return response;
             },
             error: function (error) {
                 alert("Something went wrong, Please try again later.");
+                return 0;
             }
         });
     }
     function moveLinkedEvents(event) {
-        // $.ajax({
-        //     url: "/linkEvent/" + event.id,
-        //     type: "GET",
-        //     dataType: "json",
-        //     success: function (data) {
-        //         var response = jQuery.parseJSON(JSON.stringify(data));
-        //         console.log(response)
-        //     }
-        // });
         var linkedevents = eventChecklink(event.id);
+        console.log(linkedevents)
+        return linkedevents;
     }
 });

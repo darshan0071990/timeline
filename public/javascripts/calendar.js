@@ -1,4 +1,5 @@
 $(function () {
+    var isLinked;
     $('#calander').fullCalendar({
         weekNumbers: true,
         themeSystem: 'bootstrap3',
@@ -47,6 +48,7 @@ $(function () {
             element.attr("id",event.id);
         },
         eventDragStart: function (event) {
+            $("#"+event.id).css("visibility","visbile");
             var thisForm = this;
             $.ajax({
                 url: "/checkLinked/"+event.id,
@@ -58,16 +60,42 @@ $(function () {
                     var positive_right = Math.abs(parseInt(right));
                     var cloned_width = positive_right - parseInt(left);
 
-                    console.log(cloned_width);
-                    console.log(right);
-                    $("#"+response).hide();
+
+                    $("#" + response).hide();
                     $(thisForm).append(cloned);
-                    $("#"+response).css({"left":"284px", "width":cloned_width+"px"});
-
-
+                    $("#" + response).css({"left": "284px", "width": cloned_width + "px"});
                 },
                 error: function (error) {
                     var right= Math.abs(parseInt(left))+"px";
+                    alert("Something went wrong, Please try again later.");
+                    return 0;
+                }
+            });
+        },
+        eventDragStop: function (event) {
+            var thisForm = this;
+            $.ajax({
+                url: "/checkLinked/"+event.id,
+                success: function (data) {
+                    var response = jQuery.parseJSON(JSON.stringify(data));
+                    if ($('#' + event.id).has("#" + response).length >= 1) {
+                        var myCoolDiv = document.getElementById(response);
+                        document.getElementById(event.id).removeChild(myCoolDiv);
+                        $("#" + response).show();
+                    }
+                    var cloned = $("#"+response).clone();
+                    var left = cloned.css("left");
+                    var right = cloned.css("right");
+                    var positive_right = Math.abs(parseInt(right));
+                    var cloned_width = positive_right - parseInt(left);
+
+                    if(!$('#'+event.id).has("#"+response).length > 1) {
+                        $("#" + response).hide();
+                        $(thisForm).append(cloned);
+                        $("#" + response).css({"left": "284px", "width": cloned_width + "px"});
+                    }
+                },
+                error: function (error) {
                     alert("Something went wrong, Please try again later.");
                     return 0;
                 }

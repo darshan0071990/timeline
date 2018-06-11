@@ -28,7 +28,7 @@ $(function () {
             $('#modalBody').html(event.description);
             $('#eventUrl').attr('href', event.url);
             showEditModal(event.id);
-            return false;
+            return false;œ
         },
         select: function (start, end, jsEvent, view, resource) {
             $('#sdate').attr('value', moment(start).format("DD-MM-YYYY"));
@@ -50,11 +50,12 @@ $(function () {
         eventDragStart: function (event) {
             $("#"+event.id).css("visibility","visbile");
             var thisForm = this;
+            var cloned;
             $.ajax({
                 url: "/checkLinked/"+event.id,
                 success: function (data) {
                     var response = jQuery.parseJSON(JSON.stringify(data));
-                    var cloned = $("#"+response).clone();
+                    cloned = $("#"+response).clone();
                     var left = cloned.css("left");
                     var right = cloned.css("right");
                     var positive_right = Math.abs(parseInt(right));
@@ -71,6 +72,14 @@ $(function () {
                     return 0;
                 }
             });
+
+            var checkExist = setInterval(function() {
+                if ($('.fc-helper-container').length) {
+                    $('.fc-helper-container').append(cloned);
+                    console.log("Exists!");
+                    clearInterval(checkExist);
+                }
+            }, 100); // check every 100ms
         },
         eventDragStop: function (event) {
             var thisForm = this;
@@ -122,6 +131,8 @@ $(function () {
         if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2) return false;
         return true;
     }
+
+
 
     $(".modal").on("hidden.bs.modal", function () {
         $("#task-edit-form").trigger("reset");

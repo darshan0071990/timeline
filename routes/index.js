@@ -84,6 +84,33 @@ router.post('/updatetask',function(req,res,next){
 });
 
 
+router.post('/updateLinkedEvents',function(req,res,next){
+    var id = req.body.id;
+    var sdate = moment(req.body.start,'YYYY-MM-DD').format("YYYY-MM-DD");
+    var edate = moment(req.body.end,'YYYY-MM_DD').format("YYYY-MM-DD");
+    var linkId = req.body.linkId;
+    var linkstartdate = moment(edate,'YYYY-MM-DD').add(1,'days').format('YYYY-MM-DD');
+    var linkenddate = moment(req.body.linkend,'YYYY-MM_DD').format("YYYY-MM-DD");
+    models.tasks.update({
+        sdate: sdate,
+        edate: edate,
+        uid:req.body.uid,
+    }, {where: {id:id}}).then(task => {
+        models.tasks.update({
+                sdate: linkstartdate,
+                edate: linkenddate,
+                uid:req.body.uid,
+            }, {where: {id:linkId}}).then(task => {
+                res.json(true);
+            }).catch(function() {
+                res.json(false);
+            });
+    }).catch(function() {
+        res.json(false);
+    });
+});
+
+
 router.post('/checkanotherevent',function(req,res,next) {
     var query = "SELECT id, name, sdate, edate, uid FROM tasks AS tasks WHERE tasks.id <> '"+req.body.id+"' AND tasks.uid = '"+req.body.uid+"' AND '"+req.body.start+"' >= tasks.sdate AND '"+req.body.start+"' <=tasks.edate;";
 
@@ -168,14 +195,28 @@ router.post('/linkEvent',function (req,res,next) {
     }).catch(error => {console.log(error)});
 });
 
-router.get('/checkLinked/:id',function (req,res,next) {
+router.get('/checkLinked/:id/:flag',function (req,res,next) {
+    var flag = req.params.flag;
+    console.log(flag);
     models.linktasks.find({
-        where: {basetask_id: req.params.id}})
-       .then(links => {
+        where: {basetask_id: req.params.id},
+        include: [
+            {model: models.tasks,
+            }],
+        raw:true
+        }).then(links => {
            if(links != null)
-               res.json(links.linktask_id);
+            {
+                if (flag=="false") {
+                    res.json(links.linktask_id);
+                } else {
+                    res.json(links);
+                }
+            }
            else
-               res.json(false);
+            {
+                res.json(false);
+            }
    }).catch(error => {console.log(error)});
 });
 

@@ -38,7 +38,32 @@ $(function () {
             $('#fullCalModal').modal();
         },
         eventDrop: function (event, delta, revertFunc) {
-            event_changeHandler(event, delta, revertFunc, "drop");
+            $.ajax({
+                url: "/checkLinked/"+event.id+"/true",
+                success: function (data) {
+                    var response = jQuery.parseJSON(JSON.stringify(data));
+                    console.log(response);
+                    if(response != false){
+                        var end = moment(event.end,'YYYY-MM-DD');
+                        var linkedstart = moment(response['task.sdate'],'YYYY-MM-DD');
+                        var linkedend = moment(response['task.edate'],'YYYY-MM-DD');
+                        var days = linkedend.diff(linkedstart,"days") + 1;
+
+                        var new_date = end.add(days,'days');
+                        var final = moment(new_date).format('YYYY-MM-DD');
+                        linkevent_changeHandler(event, delta, revertFunc, response['task.id'],final);
+
+                    }else{
+                        event_changeHandler(event, delta, revertFunc, "drop");
+                    }
+                },
+                error: function (error) {
+                    var right= Math.abs(parseInt(left))+"px";
+                    alert("Something went wrong, Please try again later.");
+                    return 0;
+                },
+
+             });
         },
         eventResize: function (event, delta, revertFunc, ui, view) {
             event_changeHandler(event, delta, revertFunc, "resize");
@@ -52,7 +77,7 @@ $(function () {
             var thisForm = this;
             var cloned;
             $.ajax({
-                url: "/checkLinked/"+event.id,
+                url: "/checkLinked/"+event.id+"/false",
                 success: function (data) {
                     var response = jQuery.parseJSON(JSON.stringify(data));
                     cloned = $("#"+response).clone();
@@ -82,54 +107,70 @@ $(function () {
         eventDragStop: function (event) {
             var thisForm = this;
             $.ajax({
-                url: "/checkLinked/"+event.id,
+                url: "/checkLinked/"+event.id+"/true",
                 success: function (data) {
                     var response = jQuery.parseJSON(JSON.stringify(data));
-                    if ($('#' + event.id).has("#" + response).length >= 1) {
-                        var myCoolDiv = document.getElementById(response);
-                        document.getElementById(event.id).removeChild(myCoolDiv);
-                        $("#" + response).show();
+                    var basetask = response.basetask_id;
+                    var linkedtask = response.linktask_id;
+                    if ($('#' + basetask).has("#" + linkedtask).length >= 1) {
+                        console.log("in if");
+                        var myCoolDiv = document.getElementById(linkedtask);
+                        document.getElementById(basetask).removeChild(myCoolDiv);
                     }
-                    var cloned = $("#"+response).clone();
-                    var left = cloned.css("left");
-                    var right = cloned.css("right");
-                    var positive_right = Math.abs(parseInt(right));
-                    var cloned_width = positive_right - parseInt(left);
 
-                    if(!$('#'+event.id).has("#"+response).length > 1) {
-                        $("#" + response).hide();
-                        $(thisForm).append(cloned);
-                        $("#" + response).css({"left": "284px", "width": cloned_width + "px"});
-                    }
+                    // var baseeventend = moment(event.end).format('YYYY-MM-DD');
+                    // var linkeventstart = moment(response['task.sdate']).format("YYYY-MM-DD");
+                    // var linkeventend = moment(response['task.edate']).format("YYYY-MM-DD");
+                    // var duration = moment(linkeventend - linkeventstart);
+                    // console.log(baseeventend+" "+linkeventstart + " "+linkeventend + " "+duration);
+                    $("#" + linkedtask).hide();
+                    // var cloned = $("#"+linkedtask).clone();
+                    // var left = cloned.css("left");
+                    // var right = cloned.css("right");
+                    // var positive_right = Math.abs(parseInt(right));
+                    // var cloned_width = positive_right - parseInt(left);
+                    //
+                    // if(!$('#'+basetask).has("#"+linkedtask).length > 1) {
+                    //     $("#" + linkedtask).hide();
+                    //     $(thisForm).append(cloned);
+                    //     $("#" + linkedtask).css({"left": "284px", "width": cloned_width + "px"});
+                    // }
                 },
                 error: function (error) {
                     alert("Something went wrong, Please try again later.");
                     return 0;
                 }
             });
-        }
+        },
+        eventResizeStart: function (event) {
+            $("#"+event.id).css("visibility","visbile");
+            var thisForm = this;
+            var cloned;
+            $.ajax({
+                url: "/checkLinked/"+event.id+"/false",
+                success: function (data) {
+                    var response = jQuery.parseJSON(JSON.stringify(data));
+                    console.log(response);
+                    cloned = $("#"+response).clone();
+                    var left = cloned.css("left");
+                    var right = cloned.css("right");
+                    var positive_right = Math.abs(parseInt(right));
+                    var cloned_width = positive_right - parseInt(left);
+                },
+                error: function (error) {
+                    var right= Math.abs(parseInt(left))+"px";
+                    alert("Something went wrong, Please try again later.");
+                    return 0;
+                }
+            });
+
+            var checkExist = setInterval(function() {
+                if ($('.fc-helper-container').length) {
+                    $('.fc-helper-container a:first-child').append(cloned);
+                }
+            }, 100); // check every 100ms
+        },
     });
-
-    function collision($div1, $div2) {
-        var x1 = $div1.offset().left;
-        var y1 = $div1.offset().top;
-        var h1 = $div1.outerHeight(true);
-        var w1 = $div1.outerWidth(true);
-        console.log(x1 +"   "+y1+"   "+h1+"   "+w1);
-        var b1 = y1 + h1;
-        var r1 = x1 + w1;
-        var x2 = $div2.offset().left;
-        var y2 = $div2.offset().top;
-        var h2 = $div2.outerHeight(true);
-        var w2 = $div2.outerWidth(true);
-        console.log(x2 +"   "+y2+"   "+h2+"   "+w2);
-        var b2 = y2 + h2;
-        var r2 = x2 + w2;
-
-        if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2) return false;
-        return true;
-    }
-
 
 
     $(".modal").on("hidden.bs.modal", function () {
@@ -142,7 +183,6 @@ $(function () {
             url: "/fetchTask/" + id,
             success: function (data) {
                 var response = jQuery.parseJSON(JSON.stringify(data));
-                console.log(response);
                 $("#task-edit-name").val(response.name);
                 $("#task-edit-desc").val(response.description);
                 $("#task-edit-pid").val(response.pid);
@@ -192,7 +232,6 @@ $(function () {
         var start = moment(event.start).format('YYYY-MM-DD');
         var end = moment(event.end).format('YYYY-MM-DD');
         var user = $("#calander").fullCalendar('getEventResource', event);
-        console.log(user.id);
         $.ajax({
             url: "/checkanotherevent",
             type: "POST",
@@ -229,6 +268,30 @@ $(function () {
         });
     }
 
+    function linkevent_changeHandler(event, delta, revertFunc, linkedId, linkend) {
+        var showDate = moment(event.start).format('Do MMM YYYY');
+        var start = moment(event.start).format('YYYY-MM-DD');
+        var end = moment(event.end).format('YYYY-MM-DD');
+        console.log(start + " "+linkedId);
+        var user = $("#calander").fullCalendar('getEventResource', event);
+        $.ajax({
+            url: "/updateLinkedEvents",
+            type: "POST",
+            dataType: "json",
+            data: {'id': event.id, 'start': start, 'end':end,"uid": event.resourceId, 'linkId':linkedId, 'linkend':linkend},
+            success: function (data) {
+                if (data) {
+                    location.reload();
+                } else {
+                    alert("Update Failed");
+                }
+            },
+            error: function (error) {
+                return false;
+            }
+        });
+    }
+
     function shiftEvent(event, start, end,user) {
         $.ajax({
             url: "/shiftEvent",
@@ -256,7 +319,6 @@ $(function () {
             dataType: "json",
             data: {'oid': old_taskId, "nid": new_taskId},
             success: function (data) {
-                var response = jQuery.parseJSON(JSON.stringify(data));
                 if (data) {
                     location.reload();
                 } else {

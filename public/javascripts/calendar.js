@@ -75,9 +75,7 @@ $(function () {
 
             var checkExist = setInterval(function() {
                 if ($('.fc-helper-container').length) {
-                    $('.fc-helper-container').append(cloned);
-                    console.log("Exists!");
-                    clearInterval(checkExist);
+                    $('.fc-helper-container a:first-child').append(cloned);
                 }
             }, 100); // check every 100ms
         },
@@ -139,15 +137,6 @@ $(function () {
         $("#task-form").trigger("reset");
     });
 
-    $("a").on("mousemove", function () {
-        //debugger;
-        $(this).append($(this).next());
-    });
-    $("a").mousemove (function () {
-        $(this).next().trigger("move");
-        //debugger;
-    })
-
     function showEditModal(id) {
         $.ajax({
             url: "/fetchTask/" + id,
@@ -202,6 +191,8 @@ $(function () {
         var showDate = moment(event.start).format('Do MMM YYYY');
         var start = moment(event.start).format('YYYY-MM-DD');
         var end = moment(event.end).format('YYYY-MM-DD');
+        var user = $("#calander").fullCalendar('getEventResource', event);
+        console.log(user.id);
         $.ajax({
             url: "/checkanotherevent",
             type: "POST",
@@ -214,7 +205,7 @@ $(function () {
                         linkEvent(response[0].id, event.id);
                     } else {
                         if(confirm("Do you want move this Task to "+ showDate + " ?")){
-                            shiftEvent(event,start,end);
+                            shiftEvent(event,start,end,user.id);
                         }else{
                             revertFunc();
                         }
@@ -226,7 +217,7 @@ $(function () {
                     else
                         confirm_msg = "Do you want to change the duration of Task: " + event.title;
                     if (confirm(confirm_msg)) {
-                        shiftEvent(event, start, end);
+                        shiftEvent(event, start, end,user.id);
                     } else {
                         revertFunc();
                     }
@@ -238,12 +229,12 @@ $(function () {
         });
     }
 
-    function shiftEvent(event, start, end) {
+    function shiftEvent(event, start, end,user) {
         $.ajax({
             url: "/shiftEvent",
             type: "POST",
             dataType: "json",
-            data: {'start': start, "end": end, "id": event.id},
+            data: {'start': start, "end": end, "id": event.id, "uid":user},
             success: function (data) {
                 var response = jQuery.parseJSON(JSON.stringify(data));
                 if (data) {

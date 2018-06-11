@@ -129,11 +129,12 @@ router.get('/deleteTask/:id',function (req,res,next) {
 
 router.post('/shiftEvent',function (req,res,next) {
    models.tasks.update(
-       {sdate: req.body.start, edate: req.body.end},
+       {sdate: req.body.start, edate: req.body.end, uid: req.body.uid},
        {where: {id: req.body.id}}
    ).then(result=> {
       res.json(true);
    }).catch(error=>{
+       console.log(error);
         res.json(false);
     });
 });
